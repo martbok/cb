@@ -1,0 +1,30 @@
+version: '3.6'
+
+services:
+  dynamodb.ui:
+    image: yamitzky/dynamodb-gui
+    container_name: localstack.ddb.ui
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://cb.localstack:4566
+    depends_on:
+      - cb.localstack
+    networks:
+      - cb-network
+
+  cb.localstack:
+    image: localstack/localstack
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sns,sqs,s3,dynamodb
+      - DEFAULT_REGION=us-east-1
+      - DEBUG=1
+    networks:
+      - cb-network
+
+networks:
+  cb-network:
+    name: cb-network
